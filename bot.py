@@ -4,17 +4,24 @@ import sys
 from os import getenv
 from dotenv import load_dotenv, find_dotenv
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
-
+from aiogram.filters import CommandStart
+from aiogram.types import Message
 
 load_dotenv(find_dotenv())
 
 TOKEN = getenv("TG_BOT_TOKEN")
-
+LINK = getenv("LINK")
 
 dp = Dispatcher()
+
+
+@dp.message(CommandStart)
+async def command_start_handler(message: Message) -> None:
+    await message.answer(f"Hello, {html.link(message.from_user.full_name, LINK)}!")
+
 
 
 async def main() -> None:

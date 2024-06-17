@@ -1,8 +1,6 @@
 import asyncio
 import logging
 import sys
-from os import getenv
-from dotenv import load_dotenv, find_dotenv
 
 from aiogram import Bot, Dispatcher, html
 from aiogram.client.default import DefaultBotProperties
@@ -10,22 +8,20 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 
-load_dotenv(find_dotenv())
-
-TOKEN = getenv("TG_BOT_TOKEN")
-LINK = getenv("LINK")
+from config import NAME_LINK, TG_BOT_TOKEN
+from messages import message_proccessing
 
 dp = Dispatcher()
 
 
-@dp.message(CommandStart)
+@dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
-    await message.answer(f"Hello, {html.link(message.from_user.full_name, LINK)}!")
+    await message.answer(f"Hello, {html.link(message.from_user.full_name, NAME_LINK)}!")
 
 
 
 async def main() -> None:
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    bot = Bot(token=TG_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
     await dp.start_polling(bot)
 
 

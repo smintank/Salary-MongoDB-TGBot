@@ -26,7 +26,11 @@ def get_period(group_type: str) -> tuple:
 
     period["hour"] = {'$hour': '$dt'}
     period_id["hour"] = '$_id.hour'
-    return period, period_id
+
+    if group_type == "hour":
+        return period, period_id
+
+    raise ValueError("Invalid group_type")
 
 
 def get_connection():
@@ -50,7 +54,7 @@ def get_next_period_date(current_date, period):
     return current_date + timedelta(hours=1)
 
 
-def get_documents(query: dict) -> dict:
+async def get_documents(query: dict) -> dict:
     collection = get_connection()
     dt_from: datetime = datetime.fromisoformat(query["dt_from"])
     dt_upto: datetime = datetime.fromisoformat(query["dt_upto"])

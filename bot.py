@@ -9,7 +9,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message
 
 from config import NAME_LINK, TG_BOT_TOKEN
-from messages import message_proccessing
+from salary import salary_proccessing
 
 dp = Dispatcher()
 
@@ -19,10 +19,14 @@ async def command_start_handler(message: Message) -> None:
     await message.answer(f"Hello, {html.link(message.from_user.full_name, NAME_LINK)}!")
 
 
+@dp.message()
+async def message_handler(message: Message) -> None:
+    return await salary_proccessing(message)
+
 
 async def main() -> None:
     bot = Bot(token=TG_BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, skip_updates=True)
 
 
 if __name__ == "__main__":
